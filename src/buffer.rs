@@ -138,7 +138,7 @@ pub fn print_message() {
         0,
         0,
     );
-    for i in 0..10 {
+    for i in 0..100 {
         write!(writer, "Hello World !");
     }
 }
