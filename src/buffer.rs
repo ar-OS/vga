@@ -132,8 +132,13 @@ impl fmt::Write for Writer {
  * Print a message to the screen.
  */
 pub fn print_message() {
-    let mut writer = Writer::new(0, ColorCode::default(), unsafe {
-        Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _)
-    });
-    write!(writer, "Hello World !");
+    let mut writer = Writer::new(
+        unsafe { Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _) },
+        ColorCode::default(),
+        0,
+        0,
+    );
+    for i in 0..10 {
+        write!(writer, "Hello World !");
+    }
 }
