@@ -125,9 +125,9 @@ impl fmt::Write for Writer {
 /*
  * Print a message to the screen.
  */
-pub fn print_message(message: String) {
+pub fn print_message() {
     let mut writer = Writer::new(0, ColorCode::default(), unsafe {
         Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _)
     });
-    write!(writer, message);
+    write!(writer, "Hello World !");
 }
