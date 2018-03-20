@@ -52,7 +52,12 @@ impl Writer {
     /*
      * Implement a new Writer data structure.
      */
-    pub fn new(column_position: usize, color_code: ColorCode, buffer: Unique<Buffer>) -> Writer {
+    pub fn new(
+        buffer: Unique<Buffer>,
+        color_code: ColorCode,
+        column_position: usize,
+        row_position: usize,
+    ) -> Writer {
         Writer {
             buffer,
             color_code,
@@ -65,9 +70,10 @@ impl Writer {
      * Clear the screen entirely
      */
     pub fn clear_buffer(&mut self) {
+        let color_code = self.color_code;
         for row in 0..BUFFER_HEIGHT {
             for col in 0..BUFFER_LENGTH {
-                self.buffer().content[row][col].write(b' ');
+                self.buffer().content[row][col].write((b' ', color_code));
             }
         }
     }
