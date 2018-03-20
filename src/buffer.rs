@@ -42,9 +42,10 @@ pub struct Buffer {
  * * buffer: previous, current and future text container (to be printed).
  */
 pub struct Writer {
-    column_position: usize,
-    color_code: ColorCode,
     buffer: Unique<Buffer>,
+    color_code: ColorCode,
+    column_position: usize,
+    row_position: usize,
 }
 
 impl Writer {
@@ -53,10 +54,35 @@ impl Writer {
      */
     pub fn new(column_position: usize, color_code: ColorCode, buffer: Unique<Buffer>) -> Writer {
         Writer {
-            column_position,
-            color_code,
             buffer,
+            color_code,
+            column_position,
+            row_position,
         }
+    }
+
+    /*
+     * Clear the screen entirely
+     */
+    pub fn clear_buffer(&mut self) {
+        for row in 0..BUFFER_HEIGHT {
+            for col in 0..BUFFER_LENGTH {
+                self.buffer().content[row][col].write(b' ');
+            }
+        }
+    }
+
+    /*
+     * Add an empty new line in the buffer.
+     * Using this method, the row_position will move to the next one if
+     * the current row position is lower than BUFFER_HEIGHT.
+     * Also, we move the column position to 0.
+     */
+    pub fn new_line(&mut self) {
+        if self.row_position < BUFFER_HEIGHT {
+            self.row_position += 1;
+        }
+        self.column_position = 0;
     }
 
     /*
@@ -64,10 +90,10 @@ impl Writer {
      */
     pub fn write_byte(&mut self, byte: u8) {
         if self.column_position >= BUFFER_LENGTH {
-            // Do something
+            self.new_line();
         }
         // Clone the column_position fields
-        let row = BUFFER_HEIGHT - 1;
+        let row = self.row_position;
         let col = self.column_position;
         let color_code = self.color_code;
         // Change the content buffer
