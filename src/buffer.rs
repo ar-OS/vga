@@ -55,7 +55,7 @@ impl Writer {
     }
 
     /// Clear the screen entirely
-    pub fn clear_buffer(&mut self) {
+    pub fn clear(&mut self) {
         let color_code = self.color_code;
         for row in 0..BUFFER_HEIGHT {
             for col in 0..BUFFER_LENGTH {
@@ -79,16 +79,23 @@ impl Writer {
 
     /// Write a single byte into the current buffer
     pub fn write_byte(&mut self, byte: u8) {
-        if self.column_position >= BUFFER_LENGTH {
-            self.new_line();
-        }
-        // Clone the column_position fields
         let row = self.row_position;
         let col = self.column_position;
         let color_code = self.color_code;
-        // Change the content buffer
-        self.buffer().content[row][col].write((byte, color_code));
-        self.column_position += 1;
+        match char::from(byte) {
+            '\n' => {
+                self.new_line();
+            }
+            _ => {
+                if self.column_position >= BUFFER_LENGTH {
+                    self.new_line();
+                }
+                // Clone the column_position fields
+                // Change the content buffer
+                self.buffer().content[row][col].write((byte, color_code));
+                self.column_position += 1;
+            }
+        }
     }
 
     /// Returns a mutable reference to the current internal buffer data structure
@@ -107,15 +114,24 @@ impl fmt::Write for Writer {
     }
 }
 
+/// Write a given string to the given Writer structure
+macro_rules! echo {
+    ($writer: expr, $($arg:tt)*) => ({
+        $writer.write_fmt(format_args!($($arg)*)).unwrap();
+        // $writer.new_line();
+    });
+}
+
 /// Print a message to the screen
 pub fn print_message() {
-    let mut writer = Writer::new(
+    let mut stdout = Writer::new(
         unsafe { Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _) },
         ColorCode::default(),
         0,
         0,
     );
+    stdout.clear();
     for i in 0..100 {
-        write!(writer, "Hello World !");
+        echo!(stdout, "Hello {}\n", "world!");
     }
 }
