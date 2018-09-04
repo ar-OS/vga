@@ -1,6 +1,7 @@
 use color::ColorCode;
 use core::ptr::Unique;
 use core::fmt::{self, Write};
+use spin::Mutex;
 use volatile::Volatile;
 
 /*
@@ -126,6 +127,20 @@ impl fmt::Write for Writer {
         }
         Ok(())
     }
+}
+
+/*
+ * Static API to write something in the console.ColorCode
+ * Usage of lazy_static here to trick to compiler in
+ * initializing a Color value in runtime... instead of compile time ;)
+ */
+lazy_static! {
+    pub static ref BUF_WRITER: Writer = Writer {
+        buffer: unsafe { Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _) },
+        color_code: ColorCode::default(),
+        column_position: 0,
+        row_position: 0,
+    };
 }
 
 /*
