@@ -129,23 +129,10 @@ lazy_static! {
 }
 
 /// Write a given string to the given Writer structure
+#[macro_export]
 macro_rules! echo {
     ($writer: expr, $($arg:tt)*) => ({
         $writer.write_fmt(format_args!($($arg)*)).unwrap();
         // $writer.new_line();
     });
-}
-
-/// Print a message to the screen
-pub fn print_message() {
-    let mut stdout = Writer::new(
-        unsafe { Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _) },
-        ColorCode::default(),
-        0,
-        0,
-    );
-    stdout.clear();
-    for i in 0..100 {
-        echo!(stdout, "Hello {}\n", "world!");
-    }
 }
