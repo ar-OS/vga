@@ -70,7 +70,6 @@ impl Writer {
     /// Using this method, the `row_position` will move to the next one if
     /// the current row position is lower than `BUFFER_HEIGHT`.
     /// Also, we move the `column_position` field to 0.
-     */
     pub fn new_line(&mut self) {
         if self.row_position < BUFFER_HEIGHT {
             self.row_position += 1;
