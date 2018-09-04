@@ -120,12 +120,12 @@ impl fmt::Write for Writer {
  * initializing a Color value in runtime... instead of compile time ;)
  */
 lazy_static! {
-    pub static ref BUF_WRITER: Writer = Writer {
+    pub static ref BUF_WRITER: Mutex<Writer> = Mutex::new(Writer {
         buffer: unsafe { Unique::new_unchecked(VGA_BUFFER_ADDRESS as *mut _) },
         color_code: ColorCode::default(),
         column_position: 0,
         row_position: 0,
-    };
+    });
 }
 
 /// Write a given string to the given Writer structure
