@@ -79,8 +79,6 @@ impl Writer {
 
     /// Write a single byte into the current buffer
     pub fn write_byte(&mut self, byte: u8) {
-        let row = self.row_position;
-        let col = self.column_position;
         let color_code = self.color_code;
         match char::from(byte) {
             '\n' => {
@@ -90,6 +88,8 @@ impl Writer {
                 if self.column_position >= BUFFER_LENGTH {
                     self.new_line();
                 }
+                let row = self.row_position;
+                let col = self.column_position;
                 // Clone the column_position fields
                 // Change the content buffer
                 self.buffer().content[row][col].write((byte, color_code));
