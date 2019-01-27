@@ -133,7 +133,6 @@ lazy_static! {
 macro_rules! echo {
     ($writer: expr, $($arg:tt)*) => ({
         $writer.write_fmt(format_args!($($arg)*)).unwrap();
-        $writer.new_line();
     });
 }
 
