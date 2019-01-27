@@ -136,3 +136,10 @@ macro_rules! echo {
         $writer.new_line();
     });
 }
+
+#[macro_export]
+macro_rules! clear_screen {
+    ($writer: expr) => ({
+        $writer.clear();
+    });
+}
