@@ -71,9 +71,7 @@ impl Writer {
     /// the current row position is lower than `BUFFER_HEIGHT`.
     /// Also, we move the `column_position` field to 0.
     pub fn new_line(&mut self) {
-        if self.row_position < BUFFER_HEIGHT {
-            self.row_position += 1;
-        }
+        self.row_position = (self.row_position + 1) % BUFFER_HEIGHT;
         self.column_position = 0;
     }
 
