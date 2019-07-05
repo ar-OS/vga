@@ -1,6 +1,6 @@
 use color::ColorCode;
-use core::ptr::Unique;
 use core::fmt::{self, Write};
+use core::ptr::Unique;
 use spin::Mutex;
 use volatile::Volatile;
 
@@ -129,14 +129,14 @@ lazy_static! {
 /// Write a given string to the given Writer structure
 #[macro_export]
 macro_rules! echo {
-    ($writer: expr, $($arg:tt)*) => ({
-        $writer.write_fmt(format_args!($($arg)*)).unwrap();
-    });
+    ($($arg:tt)*) => {
+        BUF_WRITER.lock().write_fmt(format_args!($($arg)*)).unwrap()
+    };
 }
 
 #[macro_export]
 macro_rules! clear_screen {
-    ($writer: expr) => ({
-        $writer.clear();
-    });
+    () => {{
+        BUF_WRITER.lock().clear();
+    }};
 }
