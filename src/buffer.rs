@@ -126,17 +126,28 @@ lazy_static! {
     });
 }
 
+#[doc(hidden)]
+pub fn _echo(args: fmt::Arguments) {
+    use core::fmt::Write;
+    BUF_WRITER.lock().write_fmt(args).unwrap();
+}
+
+#[doc(hidden)]
+pub fn _clear() {
+    BUF_WRITER.lock().clear();
+}
+
 /// Write a given string to the given Writer structure
 #[macro_export]
 macro_rules! echo {
     ($($arg:tt)*) => {
-        BUF_WRITER.lock().write_fmt(format_args!($($arg)*)).unwrap()
+        $crate::buffer::_echo(format_args!($($arg)*))
     };
 }
 
 #[macro_export]
 macro_rules! clear_screen {
     () => {{
-        BUF_WRITER.lock().clear();
+        $crate::buffer::_clear()
     }};
 }
