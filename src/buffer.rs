@@ -1,5 +1,5 @@
 use color::ColorCode;
-use core::fmt::{self, Write};
+use core::fmt;
 use core::ptr::Unique;
 use spin::Mutex;
 use volatile::Volatile;
